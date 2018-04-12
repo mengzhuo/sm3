@@ -9,7 +9,10 @@ package sm3
 import "hash"
 
 const (
-	Size      = 32
+	// The size of an SM3 checksum in bytes.
+	Size = 32
+
+	//The blocksize of SM3 in bytes.
 	BlockSize = 64
 
 	chunk = BlockSize
@@ -28,6 +31,7 @@ var (
 	}
 )
 
+// New returns a new hash.Hash computing the SM4 checksum.
 func New() hash.Hash {
 	d := new(digest)
 	d.Reset()
