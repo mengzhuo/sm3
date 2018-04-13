@@ -4,6 +4,8 @@
 
 package sm3
 
+import "encoding/binary"
+
 const (
 	t0  = 0x79cc4519 // 0 ≤ j ≤ 15
 	t16 = 0x7a879d8a // 16 ≤ j ≤ 63
@@ -25,7 +27,7 @@ func block(dig *digest, p []byte) {
 
 		// expand data
 		for j := 0; j < 16; j++ {
-			w[j] = readUint32(p[j*4 : (j+1)*4])
+			w[j] = binary.BigEndian.Uint32(p[j*4 : (j+1)*4])
 		}
 		for j := 16; j < 68; j++ {
 			w[j] = p1(w[j-16]^w[j-9]^(w[j-3]<<15|w[j-3]>>(32-15))) ^
@@ -98,8 +100,3 @@ func gg16(x, y, z uint32) uint32 { return (x & y) | (^x & z) }
 func p0(x uint32) uint32 { return x ^ ((x << 9) | (x >> (32 - 9))) ^ ((x << 17) | (x >> (32 - 17))) }
 
 func p1(x uint32) uint32 { return x ^ ((x << 15) | (x >> (32 - 15))) ^ ((x << 23) | (x >> (32 - 23))) }
-
-func readUint32(x []byte) (s uint32) {
-	s = uint32(x[0])<<24 | uint32(x[1])<<16 | uint32(x[2])<<8 | uint32(x[3])
-	return
-}

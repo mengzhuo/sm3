@@ -2,17 +2,21 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-// Package sm3 implements the SM3 hash algorithm as defined in
-// https://tools.ietf.org/id/draft-oscca-cfrg-sm3-01.html
+// Package sm3 implements the SM3 hash algorithm.
+//
+// See https://tools.ietf.org/id/draft-oscca-cfrg-sm3-01.html
 package sm3
 
-import "hash"
+import (
+	"encoding/binary"
+	"hash"
+)
 
 const (
 	// The size of an SM3 checksum in bytes.
 	Size = 32
 
-	//The blocksize of SM3 in bytes.
+	// The blocksize of SM3 in bytes.
 	BlockSize = 64
 
 	chunk = BlockSize
@@ -102,7 +106,7 @@ func (d *digest) checkSum() [Size]byte {
 
 	// Length in bits.
 	len <<= 3
-	putUint64(tmp[:], len)
+	binary.BigEndian.PutUint64(tmp[:], len)
 	d.Write(tmp[0:8])
 
 	if d.nx != 0 {
@@ -111,36 +115,16 @@ func (d *digest) checkSum() [Size]byte {
 
 	var digest [Size]byte
 
-	putUint32(digest[0:], d.h[0])
-	putUint32(digest[4:], d.h[1])
-	putUint32(digest[8:], d.h[2])
-	putUint32(digest[12:], d.h[3])
-	putUint32(digest[16:], d.h[4])
-	putUint32(digest[20:], d.h[5])
-	putUint32(digest[24:], d.h[6])
-	putUint32(digest[28:], d.h[7])
+	binary.BigEndian.PutUint32(digest[0:], d.h[0])
+	binary.BigEndian.PutUint32(digest[4:], d.h[1])
+	binary.BigEndian.PutUint32(digest[8:], d.h[2])
+	binary.BigEndian.PutUint32(digest[12:], d.h[3])
+	binary.BigEndian.PutUint32(digest[16:], d.h[4])
+	binary.BigEndian.PutUint32(digest[20:], d.h[5])
+	binary.BigEndian.PutUint32(digest[24:], d.h[6])
+	binary.BigEndian.PutUint32(digest[28:], d.h[7])
 
 	return digest
-}
-
-func putUint64(x []byte, s uint64) {
-	_ = x[7]
-	x[0] = byte(s >> 56)
-	x[1] = byte(s >> 48)
-	x[2] = byte(s >> 40)
-	x[3] = byte(s >> 32)
-	x[4] = byte(s >> 24)
-	x[5] = byte(s >> 16)
-	x[6] = byte(s >> 8)
-	x[7] = byte(s)
-}
-
-func putUint32(x []byte, s uint32) {
-	_ = x[3]
-	x[0] = byte(s >> 24)
-	x[1] = byte(s >> 16)
-	x[2] = byte(s >> 8)
-	x[3] = byte(s)
 }
 
 // Sum returns the SM3 checksum of the data.
