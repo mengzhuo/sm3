@@ -1,7 +1,7 @@
 sm3
 =======
 
-[![Build Status](https://travis-ci.org/mengzhuo/sm3.svg?branch=master)](https://travis-ci.org/mengzhuo/sm3)
+[![Go](https://github.com/mengzhuo/sm3/actions/workflows/go.yml/badge.svg)](https://github.com/mengzhuo/sm3/actions/workflows/go.yml)
 [![GoDoc](https://godoc.org/github.com/mengzhuo/sm3?status.svg)](https://godoc.org/github.com/mengzhuo/sm3)
 
 Go implement of sm3 hash algorithm
